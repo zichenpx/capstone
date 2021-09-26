@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, abort, jsonify
+from sqlalchemy import Date
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor, db
@@ -101,6 +102,7 @@ def create_app(test_config=None):
   # @requires_auth("patch:movie")
   def update_movies(movie_id):
     request_body = request.get_json()
+    print(request_body)
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
       abort(404)
@@ -199,6 +201,7 @@ def create_app(test_config=None):
  # @requires_auth('post:actor')
   def create_actor():
     request_body = request.get_json()
+    print(request_body)
     
     if "name" not in request_body \
         or "date_of_birth" not in request_body \
@@ -211,11 +214,11 @@ def create_app(test_config=None):
       abort(422)
 
     try:
-      new_actor = Actor(
-        request_body["name"],
-        request_body["date_of_birth"],
-        request_body["gender"]
-      )
+      name = request_body["name"]
+      date_of_birth = str(request_body["date_of_birth"])
+      gender = request_body["gender"]
+
+      new_actor = Actor(name, date_of_birth, gender)
 
     except Exception:
       db.session.rollback()
