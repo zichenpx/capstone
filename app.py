@@ -3,15 +3,16 @@ from flask import Flask, request, abort, jsonify
 from sqlalchemy import Date
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from sqlalchemy.sql.expression import null
 from models import setup_db, Movie, Actor, db
+import time
+from datetime import datetime
 # from auth import AuthError, requires_auth
 
 # --------------------------------------------------
 # App Config.
 # --------------------------------------------------
-
 def create_app(test_config=None):
-  # create and configure the app
   app = Flask(__name__)
   setup_db(app)
   CORS(app, resources={r"/*": {"origins": "*"}})
@@ -27,23 +28,24 @@ def create_app(test_config=None):
 # --------------------------------------------------
   @app.route("/")
   def index():
-    return jsonify({
+    result = {
       "success": True,
       "state": "Running!!",
       "health": "Good!!",
       "message": "Welcome to My Full Stack Capstone Project"
-    }), 200
+    }
+    return jsonify(result), 200
 
   @app.route("/movies")
   # @requires_auth("get:movies")
   def get_movies():
     query_movies = Movie.query.order_by(Movie.id).all()
-    movies = [movie.short() for movie in query_movies]
-
-    return jsonify({
+    movies = [movie.breif() for movie in query_movies]
+    result = {
       "success": True,
       "movies": movies
-    }), 200
+    }
+    return jsonify(result), 200
 
   @app.route("/movies/<int:movie_id>")
   # @requires_auth("get:movies-detail")
@@ -52,92 +54,97 @@ def create_app(test_config=None):
     if movie is None:
       abort(404)
 
-    return jsonify({
+    result = {
       "success": True,
       "movie": movie.full_info()
-    }), 200
+    }
+    return jsonify(result), 200
 
   @app.route("/movies", methods=["POST"])
   # @requires_auth("post:movie")
   def create_movie():
-    request_body = request.get_json()
+    data = request.get_json()
     
-    if "title" not in request_body \
-        or "release_year" not in request_body \
-        or "duration" not in request_body \
-        or "imdb_rating" not in request_body \
-        or "cast" not in request_body:
+    if "title" not in data \
+        or "release_year" not in data \
+        or "duration" not in data \
+        or "cast" not in data \
+        or "imdb_rating" not in data:
       abort(422)
 
-    if request_body["title"] == "" \
-        or request_body["release_year"] <= 0 \
-        or request_body["duration"] <= 0 \
-        or request_body["imdb_rating"] < 0 \
-        or request_body["imdb_rating"] >10 \
-        or len(request_body["cast"]) == 0:
+    if data["title"] == "" \
+        or data["release_year"] <= 0 \
+        or data["release_year"] == "" \
+        or data["duration"] <= 0 \
+        or len(data["cast"]) == 0 \
+        or data["imdb_rating"] < 0 \
+        or data["imdb_rating"] >10:
       abort(422)
+      # TypeError: '<=' not supported between instances of 'str' and 'int'
 
     try:
+
+      cast = Actor.query.filter(Actor.name.in_(data["cast"])).all()
+
       new_movie = Movie(
-        request_body["title"],
-        request_body["release_year"],
-        request_body["duration"],
-        request_body["imdb_rating"],
-        request_body["cast"]
+        data["title"],
+        data["release_year"],
+        data["duration"],
+        # cast,
+        data["imdb_rating"]
       )
-      
+      new_movie.cast = cast
+
     except Exception:
       db.session.rollback()
       abort(500)
 
     finally:
-      return jsonify({
+      new_movie.insert()
+      result = {
         "success": True,
-        "created_movie_id": new_movie.id,
         "movie": [new_movie.full_info()],
         "total_movies": len(Movie.query.all())
-      }), 201
+      }
+      return jsonify(result), 201
 
   @app.route("/movies/<int:movie_id>", methods=["PATCH"])
   # @requires_auth("patch:movie")
   def update_movies(movie_id):
-    request_body = request.get_json()
-    print(request_body)
+    data = request.get_json()
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
       abort(404)
 
-    try:  
-      if "title" in request_body:
-        if request_body["title"] == "":
+    try: 
+      if "title" in data:
+        if data["title"] == "":
           raise ValueError
-        movie.title = request_body["title"]
+        movie.title = data["title"]
 
-      if "release_year" in request_body:
-        if request_body["release_year"] <= 0:
+      if "release_year" in data:
+        if data["release_year"] <= 0:
           raise ValueError
-        movie.release_year = request_body["release_year"]
+        movie.release_year = data["release_year"]
 
-      if "duration" in request_body:
-        if request_body["duration"] <= 0:
+      if "duration" in data:
+        if data["duration"] <= 0:
           raise ValueError
-        movie.duration = request_body["duration"]
+        movie.duration = data["duration"]
 
-      if "imdb_rating" in request_body:
-        if request_body["imdb_rating"] < 0 or request_body["imdb_rating"] > 10:
+      if "cast" in data:
+        if len(data["cast"]) == 0:
           raise ValueError
-        movie.imdb_rating = request_body["imdb_rating"]
+        cast = Actor.query.filter(Actor.name.in_(data["cast"])).all()
+        # if len(data["cast"]) > len(actors):
+        movie.cast = cast
+        # else:
+        #   raise ValueError
 
-      if "cast" in request_body:
-        if len(request_body["cast"]) == 0:
+      if "imdb_rating" in data:
+        if data["imdb_rating"] < 0 or data["imdb_rating"] > 10:
           raise ValueError
-        actors = Actor.query.filter(Actor.name.in_(request_body["cast"])).all()
-        if len(request_body["cast"]) == len(actors):
-          movie.cast = actors
-        else:
-          raise ValueError
-
-      movie.update()
+        movie.imdb_rating = data["imdb_rating"]
 
     except (TypeError, ValueError, KeyError):
       db.session.rollback()
@@ -148,10 +155,12 @@ def create_app(test_config=None):
       abort(500)
 
     finally:
-      return jsonify({
+      movie.update()
+      result = {
         "success": True,
         "movie_info": movie.full_info()
-      }), 200
+      }
+      return jsonify(result), 200
 
   @app.route("/movies/<int:movie_id>", methods=["DELETE"])
   # @requires_auth("delete:movie")
@@ -163,26 +172,28 @@ def create_app(test_config=None):
     try:
       movie.delete()
 
-      return jsonify({
-        "success": True,
-        "deleted": movie_id,
-        "total_movies": len(Movie.query.all())
-      }), 200
-
     except Exception:
       db.session.rollback()
       abort(500)
+
+    finally:
+      result = {
+        "success": True,
+        "deleted": movie_id,
+        "total_movies": len(Movie.query.all())
+      }
+      return jsonify(result), 200
 
   @app.route("/actors")
   # @requires_auth("get:actors")
   def get_actors():
     query_actors = Actor.query.order_by(Actor.id).all()
-    actors = [actor.short() for actor in query_actors]
-
-    return jsonify({
+    actors = [actor.breif() for actor in query_actors]
+    result = {
       "success": True,
       "actors": actors
-    }), 200
+    }
+    return jsonify(result), 200
 
   @app.route("/actors/<int:actor_id>")
   # @requires_auth("get:actor-detail")
@@ -191,71 +202,71 @@ def create_app(test_config=None):
     if actor is None:
       abort(404)
 
-    return jsonify({
+    result = {
       "success": True,
       "actor": actor.full_info()
-    }), 200
+    }
+    return jsonify(result), 200
 
   @app.route("/actors", methods=["POST"])
  # @requires_auth("post:actor")
   def create_actor():
-    request_body = request.get_json()
-    print(request_body)
+    data = request.get_json()
     
-    if "name" not in request_body \
-        or "date_of_birth" not in request_body \
-        or "gender" not in request_body:
+    if "name" not in data \
+        or "date_of_birth" not in data \
+        or "gender" not in data:
       abort(422)
 
-    if request_body["name"] == "" \
-        or request_body["date_of_birth"] == "" \
-        or request_body["gender"] == "":
+    if data["name"] == "" \
+        or data["date_of_birth"] == "" \
+        or data["gender"] == "":
       abort(422)
 
     try:
-      name = request_body["name"]
-      date_of_birth = str(request_body["date_of_birth"])
-      gender = request_body["gender"]
+      name = data["name"]
+      date_of_birth = data["date_of_birth"]
+      gender = data["gender"]
 
       new_actor = Actor(name, date_of_birth, gender)
+      new_actor.insert()
 
     except Exception:
       db.session.rollback()
       abort(500)
 
     finally:
-      return jsonify({
+      result = {
         "success": True,
-        "created_actor_id": new_actor.id,
         "actor": [new_actor.full_info()],
         "total_actors": len(Actor.query.all())
-      }), 201
+      }
+      return jsonify(result), 201
 
   @app.route("/actors/<int:actor_id>", methods=["PATCH"])
   # @requires_auth("patch:actor")
   def update_actor(actor_id):
-    request_body = request.get_json()
+    data = request.get_json()
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
     if actor is None:
       abort(404)
 
     try:  
-      if "name" in request_body:
-        if request_body["name"] == "":
+      if "name" in data:
+        if data["name"] == "":
           raise ValueError
-        actor.name = request_body["name"]
+        actor.name = data["name"]
 
-      if "date_of_birth" in request_body:
-        if request_body["date_of_birth"] == "":
+      if "date_of_birth" in data:
+        if data["date_of_birth"] == "":
           raise ValueError
-        actor.date_of_birth = request_body["date_of_birth"]
+        actor.date_of_birth = data["date_of_birth"]
 
-      if "gender" in request_body:
-        if request_body["gender"] == "":
+      if "gender" in data:
+        if data["gender"] == "":
           raise ValueError
-        actor.gender = request_body["gender"]
-
-      actor.update()
+        actor.gender = data["gender"]
+      
 
     except (TypeError, ValueError, KeyError):
       db.session.rollback()
@@ -266,10 +277,13 @@ def create_app(test_config=None):
       abort(500)
      
     finally:
-      return jsonify({
+      actor.update()
+      result = {
         "success": True,
+        "updated": actor_id,
         "actor_info": actor.full_info()
-      }), 200
+      }
+      return jsonify(result), 200
     
 
   @app.route("/actors/<int:actor_id>", methods=["DELETE"])
@@ -282,15 +296,17 @@ def create_app(test_config=None):
     try:
       actor.delete()
 
-      return jsonify({
-        "success": True,
-        "deleted": actor_id,
-        "total_actors": len(Actor.query.all())
-      })
-
     except Exception:
       db.session.rollback()
       abort(500)
+    
+    finally:
+      result = {
+        "success": True,
+        "deleted": actor_id,
+        "total_actors": len(Actor.query.all())
+      }
+      return jsonify(result), 200
 
 
 # --------------------------------------------------

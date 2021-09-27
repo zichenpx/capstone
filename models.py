@@ -36,8 +36,8 @@ class Movie(db.Model):
   title = Column(String(256), nullable=False)
   release_year = Column(Integer, nullable=False)
   duration = Column(Integer, nullable=False)
-  imdb_rating = Column(Float, nullable=False)
   cast = db.relationship("Actor", secondary=actor_in_movie, backref=db.backref("movies", lazy=True))
+  imdb_rating = Column(Float, nullable=False)
 
   def __init__(self, title, release_year, duration, imdb_rating):
     self.title = title
@@ -49,24 +49,17 @@ class Movie(db.Model):
     db.session.add(self)
     db.session.commit()
 
+  def update(self):
+    db.session.commit()
+
   def delete(self):
     db.session.delete(self)
     db.session.commit()
 
-  def update(self):
-    db.session.commit()
-
-  def short(self):
+  def breif(self):
     return {
       "id": self.id,
       "title": self.title,
-      "release_year": self.release_year
-    }
-
-  def long(self):
-    return {
-      "title": self.title,
-      "duration": self.duration,
       "release_year": self.release_year,
       "imdb_rating": self.imdb_rating
     }
@@ -77,8 +70,8 @@ class Movie(db.Model):
       "title": self.title,
       "duration": self.duration,
       "release_year": self.release_year,
-      "imdb_rating": self.imdb_rating,
-      "cast": [actor.name for actor in self.cast]
+      "cast": [actor.name for actor in self.cast],
+      "imdb_rating": self.imdb_rating
     }
 
   def __repr__(self):
@@ -102,23 +95,17 @@ class Actor(db.Model):
     db.session.add(self)
     db.session.commit()
 
+  def update(self):
+    db.session.commit()
+
   def delete(self):
     db.session.delete(self)
     db.session.commit()
 
-  def update(self):
-    db.session.commit()
-
-  def short(self):
+  def breif(self):
     return {
       "id": self.id,
-      "name": self.name
-    }
-
-  def long(self):
-    return {
       "name": self.name,
-      "date_of_birth": self.date_of_birth.strftime("%B %d, %Y"),
       "gender": self.gender
     }
 
@@ -130,6 +117,8 @@ class Actor(db.Model):
       "gender": self.gender,
       "movies": [movie.title for movie in self.movies]
     }
+  # strftime() for date, datetime, time. 注意格式
+  # strptime() for datetime only
 
   def __repr__(self):
     return "<Movie {} {} {} />".format(self.name, self.date_of_birth, self.gender)
