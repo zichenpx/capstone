@@ -25,7 +25,7 @@ def create_app(test_config=None):
 # --------------------------------------------------
 # Routes.
 # --------------------------------------------------
-  @app.route('/')
+  @app.route("/")
   def index():
     return jsonify({
       "success": True,
@@ -34,8 +34,8 @@ def create_app(test_config=None):
       "message": "Welcome to My Full Stack Capstone Project"
     }), 200
 
-  @app.route('/movies')
-  # @requires_auth('get:movies')
+  @app.route("/movies")
+  # @requires_auth("get:movies")
   def get_movies():
     query_movies = Movie.query.order_by(Movie.id).all()
     movies = [movie.short() for movie in query_movies]
@@ -45,8 +45,8 @@ def create_app(test_config=None):
       "movies": movies
     }), 200
 
-  @app.route('/movies/<int:movie_id>')
-  # @requires_auth('get:movies-detail')
+  @app.route("/movies/<int:movie_id>")
+  # @requires_auth("get:movies-detail")
   def get_movie_by_id(movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
@@ -57,8 +57,8 @@ def create_app(test_config=None):
       "movie": movie.full_info()
     }), 200
 
-  @app.route('/movies', methods=['POST'])
-  # @requires_auth('post:movie')
+  @app.route("/movies", methods=["POST"])
+  # @requires_auth("post:movie")
   def create_movie():
     request_body = request.get_json()
     
@@ -98,7 +98,7 @@ def create_app(test_config=None):
         "total_movies": len(Movie.query.all())
       }), 201
 
-  @app.route('/movies/<int:movie_id>', methods=['PATCH'])
+  @app.route("/movies/<int:movie_id>", methods=["PATCH"])
   # @requires_auth("patch:movie")
   def update_movies(movie_id):
     request_body = request.get_json()
@@ -153,8 +153,8 @@ def create_app(test_config=None):
         "movie_info": movie.full_info()
       }), 200
 
-  @app.route('/movies/<int:movie_id>', methods=['DELETE'])
-  # @requires_auth('delete:movie')
+  @app.route("/movies/<int:movie_id>", methods=["DELETE"])
+  # @requires_auth("delete:movie")
   def delete_movie(movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
@@ -167,15 +167,14 @@ def create_app(test_config=None):
         "success": True,
         "deleted": movie_id,
         "total_movies": len(Movie.query.all())
-      })
-
+      }), 200
 
     except Exception:
       db.session.rollback()
       abort(500)
 
-  @app.route('/actors')
-  # @requires_auth('get:actors')
+  @app.route("/actors")
+  # @requires_auth("get:actors")
   def get_actors():
     query_actors = Actor.query.order_by(Actor.id).all()
     actors = [actor.short() for actor in query_actors]
@@ -185,8 +184,8 @@ def create_app(test_config=None):
       "actors": actors
     }), 200
 
-  @app.route('/actors/<int:actor_id>')
-  # @requires_auth('get:actor-detail')
+  @app.route("/actors/<int:actor_id>")
+  # @requires_auth("get:actor-detail")
   def get_actor_by_id(actor_id):
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
     if actor is None:
@@ -197,8 +196,8 @@ def create_app(test_config=None):
       "actor": actor.full_info()
     }), 200
 
-  @app.route('/actors', methods=['POST'])
- # @requires_auth('post:actor')
+  @app.route("/actors", methods=["POST"])
+ # @requires_auth("post:actor")
   def create_actor():
     request_body = request.get_json()
     print(request_body)
@@ -232,7 +231,7 @@ def create_app(test_config=None):
         "total_actors": len(Actor.query.all())
       }), 201
 
-  @app.route('/actors/<int:actor_id>', methods=['PATCH'])
+  @app.route("/actors/<int:actor_id>", methods=["PATCH"])
   # @requires_auth("patch:actor")
   def update_actor(actor_id):
     request_body = request.get_json()
@@ -273,8 +272,8 @@ def create_app(test_config=None):
       }), 200
     
 
-  @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-  # @requires_auth('delete:actor')
+  @app.route("/actors/<int:actor_id>", methods=["DELETE"])
+  # @requires_auth("delete:actor")
   def delete_actor(actor_id):
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
     if actor is None:
@@ -294,9 +293,9 @@ def create_app(test_config=None):
       abort(500)
 
 
-# # --------------------------------------------------
-# # Error Handling
-# # --------------------------------------------------
+# --------------------------------------------------
+# Error Handling
+# --------------------------------------------------
   @app.errorhandler(400)
   def bad_request(error):
     return jsonify({"success": False, "error": 400, "message": "bad request"}), 400
@@ -329,6 +328,5 @@ def create_app(test_config=None):
 
 APP = create_app()
 
-if __name__ == '__main__':
-    
-    APP.run(host='0.0.0.0', port=8080, debug=True)
+if __name__ == "__main__":
+  APP.run(host="0.0.0.0", port=8080, debug=True)

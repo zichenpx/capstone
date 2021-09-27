@@ -6,10 +6,10 @@ from flask_migrate import Migrate
 # --------------------------------------------------
 # App Config.
 # --------------------------------------------------
-database_path = os.environ.get('DATABASE_URL')
+database_path = os.environ.get("DATABASE_URL")
 if not database_path:
   database_name = "capstone"
-  database_path = "postgres://{}:{}@{}/{}".format('postgres', 'password', 'localhost:5432', database_name)
+  database_path = "postgres://{}:{}@{}/{}".format("postgres", "password", "localhost:5432", database_name)
 
 db = SQLAlchemy()
 
@@ -24,9 +24,9 @@ def setup_db(app, database_path=database_path):
 # Model
 # --------------------------------------------------
 actor_in_movie = db.Table(
-    'actor_in_movie',
-    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id'), primary_key=True),
-    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id'), primary_key=True)
+    "actor_in_movie",
+    db.Column("movie_id", db.Integer, db.ForeignKey("movies.id"), primary_key=True),
+    db.Column("actor_id", db.Integer, db.ForeignKey("actors.id"), primary_key=True)
 )
 
 class Movie(db.Model):
@@ -37,7 +37,7 @@ class Movie(db.Model):
   release_year = Column(Integer, nullable=False)
   duration = Column(Integer, nullable=False)
   imdb_rating = Column(Float, nullable=False)
-  cast = db.relationship('Actor', secondary=actor_in_movie, backref=db.backref('movies', lazy=True))
+  cast = db.relationship("Actor", secondary=actor_in_movie, backref=db.backref("movies", lazy=True))
 
   def __init__(self, title, release_year, duration, imdb_rating):
     self.title = title
