@@ -25,11 +25,43 @@ class CapstoneTestCase(unittest.TestCase):
     }
 
     self.new_movie_invalid_data = {
-      "title": "Meow",
+      "title": "",
       "release_year": "",
       "duration": 999,
       "cast": ["Louis Koo"],
       "imdb_rating": 7.0
+    }
+
+    self.new_movie_invalid_data_actors_not_in_database = {
+      "title": "Meow",
+      "release_year": 2017,
+      "duration": 100,
+      "cast": ["Louis Koo", "Angela Pomp", "josin", "idhvvs"],
+      "imdb_rating": 7.0
+    }
+
+    self.new_movie_invalid_data_int_year = {
+      "title": "Meow Meow with You",
+      "release_year": 0,
+      "duration": 999,
+      "cast": ["Louis Koo"],
+      "imdb_rating": 7.0
+    }
+
+    self.new_movie_invalid_data_int_duration = {
+      "title": "Meow Meow with You",
+      "release_year": 2017,
+      "duration": 0,
+      "cast": ["Louis Koo"],
+      "imdb_rating": 7.0
+    }
+
+    self.new_movie_invalid_data_int_rating = {
+      "title": "Meow Meow with You",
+      "release_year": 2017,
+      "duration": 100,
+      "cast": ["Louis Koo"],
+      "imdb_rating": 99
     }
 
     self.new_movie_missing_data = {
@@ -47,6 +79,10 @@ class CapstoneTestCase(unittest.TestCase):
     self.edited_movie_invalid_data = {
       "duration": "",
       "gender": ""
+    }
+
+    self.edited_movie_actors_not_in_database = {
+      "cast": ["Louis Koo", "Angela Pomp", "josin", "idhvvs"]
     }
 
     self.new_actor = {
@@ -91,7 +127,6 @@ class CapstoneTestCase(unittest.TestCase):
   def test_index_health(self):
     response = self.client().get("/")
     data = json.loads(response.data)
-
     self.assertEqual(response.status_code, 200)
     self.assertEqual(data["success"], True)
     self.assertEqual(data["state"], "Running!!")
@@ -102,177 +137,211 @@ class CapstoneTestCase(unittest.TestCase):
   # --------------------------------------------------
   # Test Movies:GET, POST, PATCH, DELETE - Start
   # --------------------------------------------------
-  # def test_get_movies(self):
-  #   response = self.client().get("/movies")
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
-  #   self.assertTrue(len(data["movies"]))
+  def test_get_movies(self):
+    response = self.client().get("/movies")
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
+    self.assertTrue(len(data["movies"]))
 
-  # def test_get_movie_by_id(self):
-  #   response = self.client().get("/movies/1")
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
+  def test_get_movie_by_id(self):
+    response = self.client().get("/movies/1")
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
 
-  # def test_404_get_movie_id_not_exist(self):
-  #   response = self.client().get("/movies/89852")
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 404)
-  #   self.assertFalse(data["success"], True)    
+  def test_404_get_movie_id_not_exist(self):
+    response = self.client().get("/movies/89852")
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 404)
+    self.assertFalse(data["success"], True)    
       
-  # def test_create_movie(self):
-  #   response = self.client().post("/movies", json=self.new_movie)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 201)
-  #   self.assertEqual(data["success"], True)
+  def test_create_movie(self):
+    response = self.client().post("/movies", json=self.new_movie)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 201)
+    self.assertEqual(data["success"], True)
 
-  # def test_422_create_movie_with_no_data(self):
-  #   response = self.client().post("/movies", json={})
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True) 
+  def test_422_create_movie_with_no_data(self):
+    response = self.client().post("/movies", json={})
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
 
-# Start - ISSUE: flow logic issue. - 09272228
+  def test_create_movie_with_actors_not_in_databasee(self):
+    response = self.client().post("/movies", json={})
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
+
+# Start - ISSUE: flow process - Done by 0928:2354
 # TypeError: '<=' not supported between instances of 'str' and 'int'
-  # def test_422_create_movie_with_invalid_data(self):
-  #   response = self.client().post("/movies", json=self.new_movie_invalid_data)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True) 
-# End - ISSUE: flow logic issue. - 09272228
+# 調整判斷邏輯解決問題。
+  def test_422_create_movie_with_invalid_data_int_year(self):
+    response = self.client().post("/movies", json=self.new_movie_invalid_data_int_year)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
 
-  # def test_422_create_movie_with_missing_data(self):
-  #   response = self.client().post("/movies", json=self.new_movie_missing_data)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True) 
+  def test_422_create_movie_with_invalid_data_int_duration(self):
+    response = self.client().post("/movies", json=self.new_movie_invalid_data_int_duration)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
 
-  # def test_update_movie(self):
-  #   r_id = 4
-  #   response = self.client().patch("/movies/{}".format(r_id), json=self.edited_movie)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
+  def test_422_create_movie_with_invalid_data_int_rating(self):
+    response = self.client().post("/movies", json=self.new_movie_invalid_data_int_rating)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
 
-  # def test_404_update_movie_not_exist(self):
-  #   r_id = 54982
-  #   response = self.client().patch("/movies/{}".format(r_id), json=self.edited_movie)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 404)
-  #   self.assertFalse(data["success"], True)
+  def test_422_create_movie_with_invalid_data(self):
+    response = self.client().post("/movies", json=self.new_movie_invalid_data)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
+
+  def test_422_create_movie_with_missing_data(self):
+    response = self.client().post("/movies", json=self.new_movie_missing_data)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
+# End
+
+  def test_update_movie(self):
+    r_id = 4
+    response = self.client().patch("/movies/{}".format(r_id), json=self.edited_movie)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
+
+  def test_404_update_movie_not_exist(self):
+    r_id = 54982
+    response = self.client().patch("/movies/{}".format(r_id), json=self.edited_movie)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 404)
+    self.assertFalse(data["success"], True)
 
   # Start - ISSUE: ERROR, fail to stop input empty value. - 09272228
-  # def test_422_update_movie_with_empty_data(self):
-  #   r_id = 4
-  #   response = self.client().patch("/movies/{}".format(r_id), json=self.edited_movie_invalid_data)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True)
-  # End - ISSUE: ERROR, fail to stop input empty value. - 09272228
+  # 調整判斷邏輯解決問題。
+  def test_422_update_movie_with_empty_data(self):
+    r_id = 4
+    response = self.client().patch("/movies/{}".format(r_id), json=self.edited_movie_invalid_data)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True)
+  # End
 
-  # def test_delete_movie(self):
-  #   r_id = 12
-  #   response = self.client().delete("/movies/{}".format(r_id))
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
-  #   self.assertEqual(data["deleted"], r_id)
+  def test_message_update_movie_with_actors_not_in_database(self):
+    r_id = 14
+    response = self.client().patch("/movies/{}".format(r_id), json=self.edited_movie_actors_not_in_database)
+    data = json.loads(response.data)
+    # self.assertEqual(data, "Please check cast are all in the database.")
+    self.assertEqual(data["message"], "Please check cast are all in the database.")
 
-  # def test_404_delete_movie_not_exist(self):
-  #   r_id = 868072
-  #   response = self.client().delete("/movies/{}".format(r_id))
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 404)
-  #   self.assertFalse(data["success"], True)
+  def test_delete_movie(self):
+    r_id = 12
+    response = self.client().delete("/movies/{}".format(r_id))
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
+    self.assertEqual(data["deleted"], r_id)
+
+  def test_404_delete_movie_not_exist(self):
+    r_id = 868072
+    response = self.client().delete("/movies/{}".format(r_id))
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 404)
+    self.assertFalse(data["success"], True)
   # --------------------------------------------------
   # Test Movies:GET, POST, PATCH, DELETE - End
   # --------------------------------------------------
   # --------------------------------------------------
   # Test Actos:GET, POST, PATCH, DELETE - Start
   # --------------------------------------------------
-  # def test_get_actors(self):
-  #   response = self.client().get("/actors")
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
-  #   self.assertTrue(len(data["actors"]))
+  def test_get_actors(self):
+    response = self.client().get("/actors")
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
+    self.assertTrue(len(data["actors"]))
 
-  # def test_get_actors_by_id(self):
-  #   response = self.client().get("/actors/1")
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
+  def test_get_actors_by_id(self):
+    response = self.client().get("/actors/1")
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
 
-  # def test_404_get_actors_id_not_exist(self):
-  #   response = self.client().get("/actors/8429031")
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 404)
-  #   self.assertFalse(data["success"], True)  
+  def test_404_get_actors_id_not_exist(self):
+    response = self.client().get("/actors/8429031")
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 404)
+    self.assertFalse(data["success"], True)  
 
-  # def test_create_actor(self):
-  #   response = self.client().post("/actors", json=self.new_actor)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 201)
-  #   self.assertEqual(data["success"], True)
+  def test_create_actor(self):
+    response = self.client().post("/actors", json=self.new_actor)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 201)
+    self.assertEqual(data["success"], True)
 
-  # def test_422_create_actor_with_no_data(self):
-  #   response = self.client().post("/actors", json={})
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True) 
+  def test_422_create_actor_with_no_data(self):
+    response = self.client().post("/actors", json={})
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
 
-  # def test_422_create_actor_with_invalid_data(self):
-  #   response = self.client().post("/actors", json=self.new_actor_invalid_data)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True) 
+  def test_422_create_actor_with_invalid_data(self):
+    response = self.client().post("/actors", json=self.new_actor_invalid_data)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
   
-  # def test_422_create_actor_with_missing_data(self):
-  #   response = self.client().post("/actors", json=self.new_actor_missing_data)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True) 
+  def test_422_create_actor_with_missing_data(self):
+    response = self.client().post("/actors", json=self.new_actor_missing_data)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True) 
 
-  # def test_update_actor(self):
-  #   r_id = 18
-  #   response = self.client().patch("/actors/{}".format(r_id), json=self.edited_actor)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
-  #   self.assertEqual(data["updated"], r_id)
+  def test_update_actor(self):
+    r_id = 18
+    response = self.client().patch("/actors/{}".format(r_id), json=self.edited_actor)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
+    self.assertEqual(data["updated"], r_id)
 
-  # def test_404_update_actor_not_exist(self):
-  #   r_id = 5106784
-  #   response = self.client().patch("/actors/{}.format(r_id)", json=self.edited_actor)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 404)
-  #   self.assertFalse(data["success"], True)
+  def test_404_update_actor_not_exist(self):
+    r_id = 5106784
+    response = self.client().patch("/actors/{}.format(r_id)", json=self.edited_actor)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 404)
+    self.assertFalse(data["success"], True)
 
 
-  # Start - ISSUE: ERROR, fail to stop input empty value. - 09272228
-  # def test_422_update_actor_empty_data(self):
-  #   r_id = 1
-  #   response = self.client().patch("/actors/{}".format(r_id), json=self.edited_actor_invalid_data)
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 422)
-  #   self.assertFalse(data["success"], True)
-  # End - ISSUE: ERROR, fail to stop input empty value. - 09272228
+  # Start - ISSUE: ERROR, fail to stop input empty value. - Done by 0928:2243
+  # 調整判斷錯誤的流程
+  def test_422_update_actor_empty_data(self):
+    r_id = 1
+    response = self.client().patch("/actors/{}".format(r_id), json=self.edited_actor_invalid_data)
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 422)
+    self.assertFalse(data["success"], True)
+  # End
 
-  # def test_delete_actor(self):
-  #   r_id = 12
-  #   response = self.client().delete("/actors/{}".format(r_id))
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 200)
-  #   self.assertEqual(data["success"], True)
-  #   self.assertEqual(data["deleted"], r_id)
+  def test_delete_actor(self):
+    r_id = 12
+    response = self.client().delete("/actors/{}".format(r_id))
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(data["success"], True)
+    self.assertEqual(data["deleted"], r_id)
 
-  # def test_404_delete_actor_not_exist(self):
-  #   r_id = 20549
-  #   response = self.client().delete("/actors/{}".format(r_id))
-  #   data = json.loads(response.data)
-  #   self.assertEqual(response.status_code, 404)
-  #   self.assertFalse(data["success"], True)
+  def test_404_delete_actor_not_exist(self):
+    r_id = 20549
+    response = self.client().delete("/actors/{}".format(r_id))
+    data = json.loads(response.data)
+    self.assertEqual(response.status_code, 404)
+    self.assertFalse(data["success"], True)
   # --------------------------------------------------
   # Test Actos:GET, POST, PATCH, DELETE - End
   # --------------------------------------------------

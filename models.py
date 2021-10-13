@@ -2,7 +2,6 @@ import os
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, Date
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
 # --------------------------------------------------
 # App Config.
 # --------------------------------------------------
@@ -19,16 +18,18 @@ def setup_db(app, database_path=database_path):
   db.app = app
   db.init_app(app)
   db.create_all()
-
 # --------------------------------------------------
-# Model
+# 關聯表單 - Movie(One) 對 Actor(Many)
+# 必須放在 Model 前面，不然會有 error - point
 # --------------------------------------------------
 actor_in_movie = db.Table(
-    "actor_in_movie",
-    db.Column("movie_id", db.Integer, db.ForeignKey("movies.id"), primary_key=True),
-    db.Column("actor_id", db.Integer, db.ForeignKey("actors.id"), primary_key=True)
+  "actor_in_movie",
+  db.Column("movie_id", db.Integer, db.ForeignKey("movies.id"), primary_key=True),
+  db.Column("actor_id", db.Integer, db.ForeignKey("actors.id"), primary_key=True)
 )
-
+# --------------------------------------------------
+# Model - Movie
+# --------------------------------------------------
 class Movie(db.Model):
   __tablename__ = "movies"
 
@@ -77,7 +78,9 @@ class Movie(db.Model):
   def __repr__(self):
     return "<Movie {} {} {} {} />".format(self.title, self.release_year, self.imdb_rating, self.duration)
 
-
+# --------------------------------------------------
+# Model - Actor
+# --------------------------------------------------
 class Actor(db.Model):
   __tablename__ = "actors"
 
@@ -85,6 +88,7 @@ class Actor(db.Model):
   name = Column(String(256), nullable=False)
   date_of_birth = Column(Date, nullable=False)
   gender = Column(String, nullable=True)
+  # Pending: 改 gender's datatype
 
   def __init__(self, name, date_of_birth, gender):
     self.name = name
@@ -121,4 +125,5 @@ class Actor(db.Model):
   # strptime() for datetime only
 
   def __repr__(self):
-    return "<Movie {} {} {} />".format(self.name, self.date_of_birth, self.gender)
+    return "<Actor {} {} {} />".format(self.name, self.date_of_birth, self.gender)
+
