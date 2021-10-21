@@ -39,7 +39,7 @@ def create_app(test_config=None):
 
   @app.route("/movies")
   @requires_auth("get:movies")
-  def get_movies():
+  def get_movies(payload):
     query_movies = Movie.query.order_by(Movie.id).all()
     movies = [movie.breif() for movie in query_movies]
     result = {
@@ -50,7 +50,7 @@ def create_app(test_config=None):
 
   @app.route("/movies/<int:movie_id>")
   @requires_auth("get:movies-detail")
-  def get_movie_by_id(movie_id):
+  def get_movie_by_id(payload, movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
       abort(404)
@@ -63,7 +63,7 @@ def create_app(test_config=None):
 
   @app.route("/movies", methods=["POST"])
   @requires_auth("post:movie")
-  def create_movie():
+  def create_movie(payload):
     error = False
     data = request.get_json()
 
@@ -124,7 +124,7 @@ def create_app(test_config=None):
 
   @app.route("/movies/<int:movie_id>", methods=["PATCH"])
   @requires_auth("patch:movie")
-  def update_movies(movie_id):
+  def update_movies(payload, movie_id):
     error = False
     typing_error = False
     unexpected_error = False
@@ -194,7 +194,7 @@ def create_app(test_config=None):
 
   @app.route("/movies/<int:movie_id>", methods=["DELETE"])
   @requires_auth("delete:movie")
-  def delete_movie(movie_id):
+  def delete_movie(payload, movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
       abort(404)
@@ -216,7 +216,7 @@ def create_app(test_config=None):
 
   @app.route("/actors")
   @requires_auth("get:actors")
-  def get_actors():
+  def get_actors(payload):
     query_actors = Actor.query.order_by(Actor.id).all()
     actors = [actor.breif() for actor in query_actors]
     result = {
@@ -227,7 +227,7 @@ def create_app(test_config=None):
 
   @app.route("/actors/<int:actor_id>")
   @requires_auth("get:actors-detail")
-  def get_actor_by_id(actor_id):
+  def get_actor_by_id(payload, actor_id):
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
     if actor is None:
       abort(404)
@@ -240,7 +240,7 @@ def create_app(test_config=None):
 
   @app.route("/actors", methods=["POST"])
   @requires_auth("post:actor")
-  def create_actor():
+  def create_actor(payload):
     data = request.get_json()
     
     if "name" not in data \
@@ -276,7 +276,7 @@ def create_app(test_config=None):
 
   @app.route("/actors/<int:actor_id>", methods=["PATCH"])
   @requires_auth("patch:actor")
-  def update_actor(actor_id):
+  def update_actor(payload, actor_id):
     error = False
     data = request.get_json()
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
@@ -326,7 +326,7 @@ def create_app(test_config=None):
 
   @app.route("/actors/<int:actor_id>", methods=["DELETE"])
   @requires_auth("delete:actor")
-  def delete_actor(actor_id):
+  def delete_actor(payload, actor_id):
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
     if actor is None:
       abort(404)
