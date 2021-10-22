@@ -5,10 +5,16 @@ from flask_migrate import Migrate
 # --------------------------------------------------
 # App Config.
 # --------------------------------------------------
-database_path = os.environ.get("DATABASE_URL")
-if not database_path:
-  database_name = "capstone"
-  database_path = "postgres://{}:{}@{}/{}".format("postgres", "password", "localhost:5432", database_name)
+# DB_USER = os.environ.get("DB_USER")
+# DB_PASSWORD = os.environ.get("DB_PASSWORD")
+# DB_HOST = os.environ.get("DB_HOST")
+# DB_PORT = os.environ.get("DB_PORT")
+# DB_NAME = os.environ.get("DB_NAME")
+# database_name = DB_NAME
+# database_path = "postgres://{}:{}@{}:{}/{}".format(DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME)
+
+database_name = "capstone"
+database_path = "postgres://{}:{}@{}/{}".format("postgres", "password", "localhost:5432", database_name)
 
 db = SQLAlchemy()
 
