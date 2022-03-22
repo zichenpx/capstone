@@ -5,16 +5,16 @@ from flask_migrate import Migrate
 # --------------------------------------------------
 # App Config.
 # --------------------------------------------------
-# DB_USER = os.environ.get("DB_USER")
-# DB_PASSWORD = os.environ.get("DB_PASSWORD")
-# DB_HOST = os.environ.get("DB_HOST")
-# DB_PORT = os.environ.get("DB_PORT")
-# DB_NAME = os.environ.get("DB_NAME")
-# database_name = DB_NAME
-# database_path = "postgres://{}:{}@{}:{}/{}".format(DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME)
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+DB_HOST = os.environ.get("DB_HOST")
+DB_PORT = os.environ.get("DB_PORT")
+DB_NAME = os.environ.get("DB_NAME")
+database_name = DB_NAME
+database_path = "postgres://{}:{}@{}:{}/{}".format(DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME)
 
-database_name = "capstone"
-database_path = "postgres://{}:{}@{}/{}".format("postgres", "password", "localhost:5432", database_name)
+# database_name = "capstone"
+# database_path = "postgres://{}:{}@{}/{}".format("postgres", "password", "localhost:5432", database_name)
 
 db = SQLAlchemy()
 
@@ -123,10 +123,19 @@ class Actor(db.Model):
     return {
       "id": self.id,
       "name": self.name,
-      "date_of_birth": self.date_of_birth.strftime("%B %d, %Y"),
+      "date_of_birth": self.date_of_birth.time("%B %d, %Y"),
       "gender": self.gender,
       "movies": [movie.title for movie in self.movies]
     }
+
+  #  def full_info(self):
+  #   return {
+  #     "id": self.id,
+  #     "name": self.name,
+  #     "date_of_birth": self.date_of_birth.strftime("%B %d, %Y"),
+  #     "gender": self.gender,
+  #     "movies": [movie.title for movie in self.movies]
+  #   }
   # strftime() for date, datetime, time. 注意格式
   # strptime() for datetime only
 
