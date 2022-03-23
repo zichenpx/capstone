@@ -12,10 +12,10 @@ from models import setup_db, Actor, Movie
 #     "Authorization": "Bearer {}".format(os.environ.get('AGENCY_TOKEN'))
 # }
 
-agency_token = os.environ.get("AGENCY_TOKEN")
-print(agency_token)
-agency_auth_header = {
-    "Authorization": "Bearer {}".format("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJxX1E3QjFYWGdiNk5MWjVPbWFLOSJ9.eyJpc3MiOiJodHRwczovL3l0cDZkZXYudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYxMzMwZTc3ZWJjZWE1MDA2YTA0NjU3NCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjM0OTgyMDc4LCJleHAiOjE2MzUwNjg0NzgsImF6cCI6Imdqamw1bGxsWEp6YnBPQ0pYeWtRYmVJNFpOdlNnVFNZIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3IiLCJkZWxldGU6bW92aWUiLCJnZXQ6YWN0b3JzIiwiZ2V0OmFjdG9ycy1kZXRhaWwiLCJnZXQ6bW92aWVzIiwiZ2V0Om1vdmllcy1kZXRhaWwiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.YyjpvsNVBWBfkPFLslkStvwhEr6uiT7ayBPlDLzZgBS0WWgCqQKARCsH5YKP4msqrFiGVz4HkX1Sp_jxhHnxu1UUDRnLC9uoJdYh8P338swsupkEke22geXcM94ntlT8veXJewo-LoXBMaZcd-36MKCsHWFAAi2h8E8xO_b1SuNkxy1sre0LCbgQVAtkLkte3T6xNPyaUK6eo8ty-5jyG4in3MaaKmZkknXTihKjOqxGbLK4feV0mqPNxQGcJmuQokFjq36LNRH1FzVDcbqaH-otwfO_Yn6WWU-7fFpsR6NMqr_AcnaLPaMao-Z_YSrhX-kjqN6By0ZZOfnvXZDz7g")
+user_token = os.environ.get("USER_TOKEN")
+print(user_token)
+user_auth_header = {
+    "Authorization": "Bearer {}".format("")
 }
 
 class CapstoneTestCase(unittest.TestCase):

@@ -8,15 +8,15 @@ from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import setup_db, Actor, Movie
 
-# agency_auth_header = {
-#     "Authorization": "Bearer {}".format(os.environ.get('AGENCY_TOKEN'))
-# }
+agency_auth_header = {
+    "Authorization": "Bearer {}".format(os.environ.get('AGENCY_TOKEN'))
+}
 
 agency_token = os.environ.get("AGENCY_TOKEN")
 print(agency_token)
-agency_auth_header = {
-    "Authorization": "Bearer {}".format("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJxX1E3QjFYWGdiNk5MWjVPbWFLOSJ9.eyJpc3MiOiJodHRwczovL3l0cDZkZXYudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYxMzMwZTc3ZWJjZWE1MDA2YTA0NjU3NCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjM0OTgyMDc4LCJleHAiOjE2MzUwNjg0NzgsImF6cCI6Imdqamw1bGxsWEp6YnBPQ0pYeWtRYmVJNFpOdlNnVFNZIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3IiLCJkZWxldGU6bW92aWUiLCJnZXQ6YWN0b3JzIiwiZ2V0OmFjdG9ycy1kZXRhaWwiLCJnZXQ6bW92aWVzIiwiZ2V0Om1vdmllcy1kZXRhaWwiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.YyjpvsNVBWBfkPFLslkStvwhEr6uiT7ayBPlDLzZgBS0WWgCqQKARCsH5YKP4msqrFiGVz4HkX1Sp_jxhHnxu1UUDRnLC9uoJdYh8P338swsupkEke22geXcM94ntlT8veXJewo-LoXBMaZcd-36MKCsHWFAAi2h8E8xO_b1SuNkxy1sre0LCbgQVAtkLkte3T6xNPyaUK6eo8ty-5jyG4in3MaaKmZkknXTihKjOqxGbLK4feV0mqPNxQGcJmuQokFjq36LNRH1FzVDcbqaH-otwfO_Yn6WWU-7fFpsR6NMqr_AcnaLPaMao-Z_YSrhX-kjqN6By0ZZOfnvXZDz7g")
-}
+# agency_auth_header = {
+#     "Authorization": "Bearer {}".format("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJxX1E3QjFYWGdiNk5MWjVPbWFLOSJ9.eyJpc3MiOiJodHRwczovL3l0cDZkZXYudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYxMzMwZTc3ZWJjZWE1MDA2YTA0NjU3NCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjQ3OTIzOTAwLCJleHAiOjE2NDgwMTAzMDAsImF6cCI6Imdqamw1bGxsWEp6YnBPQ0pYeWtRYmVJNFpOdlNnVFNZIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3IiLCJkZWxldGU6bW92aWUiLCJnZXQ6YWN0b3JzIiwiZ2V0OmFjdG9ycy1kZXRhaWwiLCJnZXQ6bW92aWVzIiwiZ2V0Om1vdmllcy1kZXRhaWwiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.sq4cDgTIA4N4cH2HOpqp2IIcvHE4Y5G3WgnRIyo4AzXcw4kKWr6WhVRXOL6nEIgd-8IFvN4jVLHUX4jDvD2ZT_7QjZGMe8dTZcwvISPuIigWHcTuCdc-kUGJpBfaiSe78IOq6RVK8xFWEL-azaWHIZw8SHUsnhSnl7I4B-RgZRGpTVXqqalBNDbX7um6wU6r2U1EjHSffQ4XA5KRxP_v6yA7N7HAt28YiZzfGkU233YgZhec1V25-6_loh5_-6UjulftLxRopIl6RSZUiLPlMAja66Foc3QYHc-ICa_8NE0yJ2-lnEBCwiLlqnpsiHb1LYPICbbgitqTQL8-Y7nCzQ")
+# }
 
 class CapstoneTestCase(unittest.TestCase):
 
@@ -250,7 +250,7 @@ class CapstoneTestCase(unittest.TestCase):
     self.assertEqual(data["message"], "Please check cast are all in the database.")
 
   def test_delete_movie(self):
-    r_id = 3
+    r_id = 15
     response = self.client().delete("/movies/{}".format(r_id), headers = agency_auth_header)
     data = json.loads(response.data)
     self.assertEqual(response.status_code, 200)
@@ -339,7 +339,7 @@ class CapstoneTestCase(unittest.TestCase):
   # End
 
   def test_delete_actor(self):
-    r_id = 3
+    r_id = 14
     response = self.client().delete("/actors/{}".format(r_id), headers = agency_auth_header)
     data = json.loads(response.data)
     self.assertEqual(response.status_code, 200)
