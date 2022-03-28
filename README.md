@@ -142,12 +142,12 @@ The API will return these error types when requests fail:
 #### GET /
 - A public root endpoint, no authentication required, can also check if the API is running or not.
 
-**Sample Request**
+##### Sample Request
 `http://127.0.0.1:5000`
 
-<details>
-<summary>Sample Response</summary>
 
+##### Sample Response
+<details>
 ```json
 {
     "health": "Good!!",
@@ -156,6 +156,9 @@ The API will return these error types when requests fail:
     "success": true
 }
 ```
+</details>
+
+---
 
 #### GET /movies
 - Returns a list of all the movies.
@@ -253,6 +256,7 @@ The API will return these error types when requests fail:
     "success": true
 }
 ```
+</details>
 
 ### GET /movies/{movie_id}
 - Returns details of a certain movies with its cast, duration, id, imdb rating, release year, title and success message.
@@ -281,6 +285,7 @@ The API will return these error types when requests fail:
     "success": true
 }
 ```
+</details>
 
 #### POST /movies
 - Creates a new movie using the title and release year, duration, cast, imdb rating. 
@@ -323,6 +328,7 @@ The API will return these error types when requests fail:
     "total_movies": 14
 }
 ```
+</details>
 
 #### PATCH /movies/{movie_id}
 - Updates the movie based on the given movie ID using the updated title, release year, imdb rating, duration, casts.
@@ -357,6 +363,7 @@ The API will return these error types when requests fail:
     "success": true
 }
 ```
+</details>
 
 #### DELETE /movies/{movie_id}
 - Deletes the movie based on the given movie ID.
@@ -376,6 +383,7 @@ The API will return these error types when requests fail:
     "total_movies": 13
 }
 ```
+</details>
 
 #### GET /actors
 - Returns a list of all the actors.
@@ -469,6 +477,7 @@ The API will return these error types when requests fail:
     "success": true
 }
 ```
+</details>
 
 ### GET /actors/id
 - Returns details of a certain actor with its birthday, gender, id, movies, name and success message.
@@ -495,6 +504,7 @@ The API will return these error types when requests fail:
     "success": true
 }
 ```
+</details>
 
 #### POST /actors
 - Creates a new actor using the name, birthday, and gender. 
@@ -510,6 +520,7 @@ The API will return these error types when requests fail:
     "gender": "F"
 }
 ```
+</details>
 
 <details>
 <summary>Sample Response</summary>
@@ -529,6 +540,7 @@ The API will return these error types when requests fail:
     "total_actors": 16
 }
 ```
+</details>
 
 #### PATCH /actors/{actor_id}
 - Updates the actor based on the given actor ID using the updated name, birthday, or gender.
@@ -562,6 +574,7 @@ The API will return these error types when requests fail:
     "updated": 5
 }
 ```
+</details>
 
 #### DELETE /actors/{actor_id}
 - Deletes the actor based on the given actor ID.
@@ -581,6 +594,7 @@ The API will return these error types when requests fail:
     "total_actors": 17
 }
 ```
+</details>
 
 ## 5. Testing
 There two test files - one for role agency, one for role user.
