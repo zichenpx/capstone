@@ -143,13 +143,11 @@ The API will return these error types when requests fail:
 - A public root endpoint, no authentication required, can also check if the API is running or not.
 
 ##### Sample Request
-`http://127.0.0.1:5000`
+```http://127.0.0.1:5000```
 
 
 
-<details>
-
-##### Sample Response
+<details> ##### Sample Response
 
 ```json
 {
@@ -168,11 +166,11 @@ The API will return these error types when requests fail:
 - `get:movies` permission required.
 
 **Sample Request**
-`http://127.0.0.1:5000/movies`
+```http://127.0.0.1:5000/movies```
 
-
+##### Sample Response
 <details>
-<summary>Sample Response</summary>
+<summary>Expand</summary>
 
 ```json
 {
@@ -290,7 +288,7 @@ The API will return these error types when requests fail:
 ```
 </details>
 
-***
+---
 
 #### POST /movies
 - Creates a new movie using the title and release year, duration, cast, imdb rating. 
