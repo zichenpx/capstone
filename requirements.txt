@@ -17,7 +17,7 @@ ecdsa==0.17.0
 filelock==3.0.12
 Flask==1.1.2
 Flask-Cors==3.0.7
-Flask-Migrate==2.1.1
+Flask-Migrate==1.1.1
 Flask-Moment==0.11.0
 Flask-RESTful==0.3.7
 Flask-Script==2.0.6
