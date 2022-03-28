@@ -146,8 +146,11 @@ The API will return these error types when requests fail:
 `http://127.0.0.1:5000`
 
 
-##### Sample Response
+
 <details>
+
+##### Sample Response
+
 ```json
 {
     "health": "Good!!",
@@ -286,6 +289,8 @@ The API will return these error types when requests fail:
 }
 ```
 </details>
+
+***
 
 #### POST /movies
 - Creates a new movie using the title and release year, duration, cast, imdb rating. 
