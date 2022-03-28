@@ -2,9 +2,12 @@ import os
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, Date
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 # --------------------------------------------------
 # App Config.
 # --------------------------------------------------
+load_dotenv()
+
 DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_HOST = os.environ.get("DB_HOST")
@@ -123,7 +126,7 @@ class Actor(db.Model):
     return {
       "id": self.id,
       "name": self.name,
-      "date_of_birth": self.date_of_birth.time("%B %d, %Y"),
+      "date_of_birth": self.date_of_birth.strftime("%B %d, %Y"),
       "gender": self.gender,
       "movies": [movie.title for movie in self.movies]
     }
