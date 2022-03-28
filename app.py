@@ -382,5 +382,6 @@ def create_app(test_config=None):
 
 app = create_app()
 
-# if __name__ == "__main__":
-#   APP.run(host="0.0.0.0", port=8080, debug=True)
+if __name__ == "__main__":
+  app.run(host="https://tranquil-ridge-30288.herokuapp.com/")
+#   app.run(host="0.0.0.0", port=8080, debug=True)
