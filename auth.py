@@ -11,7 +11,7 @@ load_dotenv()
 # Configuration
 AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
 AUTH0_API_AUDIENCE = os.environ.get("AUTH0_API_AUDIENCE")
-AUTH0_ALGORITHMS = os.environ.get["AUTH0_ALGORITHMS"]
+AUTH0_ALGORITHMS = os.environ.get("AUTH0_ALGORITHMS")
 AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID")
 
 
