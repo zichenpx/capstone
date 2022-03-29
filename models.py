@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 # --------------------------------------------------
 load_dotenv()
 
+## Locoal DB
 # DB_USER = os.environ.get("DB_USER")
 # DB_PASSWORD = os.environ.get("DB_PASSWORD")
 # DB_HOST = os.environ.get("DB_HOST")
@@ -15,9 +16,9 @@ load_dotenv()
 # DB_NAME = os.environ.get("DB_NAME")
 # database_name = DB_NAME
 # database_path = "postgres://{}:{}@{}:{}/{}".format(DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME)
-database_path="postgres://vlopriqhlfttbd:3ca92e7ffd3c752a72e78706c913dd018184795e8f7a0fc8b86cf5f6b43afdca@ec2-3-219-103-45.compute-1.amazonaws.com:5432/dc2fkaro7v6s5f"
-# database_name = "capstone"
-# database_path = "postgres://{}:{}@{}/{}".format("postgres", "password", "localhost:5432", database_name)
+
+## Heroku Postgres URL
+database_path=os.environ.get("DATABASE_URL_HEROKU")
 
 db = SQLAlchemy()
 

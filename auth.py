@@ -4,12 +4,16 @@ from flask import request, abort, _request_ctx_stack
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuration
-AUTH0_DOMAIN = "ytp6dev.us.auth0.com"
-API_AUDIENCE = "capstone"
-ALGORITHMS = ["RS256"]
-CLIENT_ID = "gjjl5lllXJzbpOCJXykQbeI4ZNvSgTSY"
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+API_AUDIENCE = os.environ.get('API_AUDIENCE')
+ALGORITHMS = os.environ.get['ALGORITHMS']
+CLIENT_ID = os.environ.get('CLIENT_ID')
+
 
 # Gets JSON data from URL
 # Source: https://bit.ly/3cbBd5y
