@@ -1,12 +1,17 @@
 # Capstone/ Casting Agency project (Full Stack Project)
 
+The Capstone/ Casting Agency project, a final project of Full Stack Web Developer Nanodegree Program of Udacity, is an application that you can practice full stack skills.
+
+Live on:
 https://tranquil-ridge-30288.herokuapp.com/
+
+P.S.: If the website didn't work, feel free to contact me, and it may also means that I stop the app for some reasons.
 
 ## 1. Motivations
 
 This is the final project of Udacity Full Stack Web Developer Nanodegree Program. This is an opportunity for me to reinforce those skills and walk away very confident in them.
 
-- Coding in Python 3
+- Coding in Python
 - Relational Database Architecture
 - Modeling Data Objects with SQLAlchemy
 - Internet Protocols and Communication
@@ -20,7 +25,7 @@ This is the final project of Udacity Full Stack Web Developer Nanodegree Program
 
 ## 2. Casting Agency Project Specifications
 
-The Casting Agency project an application that is responsible for creating movies and managing and assigning actors to those movies.
+The Casting Agency project isan application that is responsible for creating movies and managing and assigning actors to those movies.
 
 - Models:
 
@@ -69,10 +74,16 @@ More instructions can be found in the [python docs](https://packaging.python.org
 Once you have your virtual environment setup and running, install dependencies by navigating to the `/backend` directory and running:
 
 ```bash
+pip3 install -r requirements.txt
+```
+
+or
+
+```bash
 pip install -r requirements.txt
 ```
 
-This will install all of the required packages this project selected within the `requirements.txt` file.
+This will install all of the required packages this project selected within the `requirements.txt` file. Furthermore, it is better to use pip3 for python3 because on some systems pip is mapped with python2. However, pip is working for me, I am not going to hide it and providing another way. Maybe pip3 did not work with you, yet pip did!
 
 ##### Key Dependencies
 
@@ -82,11 +93,13 @@ This will install all of the required packages this project selected within the 
 
 - [jose](https://python-jose.readthedocs.io/en/latest/) JavaScript Object Signing and Encryption for JWTs. Useful for encoding, decoding, and verifying JWTS.
 
+- [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) Flask-Migrate is an extension that handles SQLAlchemy database migrations for Flask applications using Alembic. The database operations are made available through the Flask command-line interface.
+
 ### 3.2. Running the server
 
 From within the root directory first ensure you are working using your created virtual environment.
 
-To run the server, execute:
+To run the server on Linux system, execute:
 
 ```bash
 export FLASK_APP=app.py
@@ -96,12 +109,21 @@ flask run --reload
 or
 
 ```bash
-export FLASK_APP=app.py
-export FLASK_ENV=development
+set FLASK_APP=app.py
+set FLASK_ENV=development
 flask run
 ```
 
+To run the server on Windows system, execute:
+
+```bash
+set FLASK_APP=app.py
+flask run --reload
+```
+
 The `--reload` flag will detect file changes and restart the server automatically.
+
+P.S.: the `export` command works with me, though I developed in Windows system, and used [Hyper Terminal](https://hyper.is/), for your information. Another good external command interfaces(terminal) recommended are [Git Bash for windows](https://gitforwindows.org/) and [Cmder | Console Emulator](https://cmder.net/) due to some reason might be a Windows related issue.
 
 ## 4. API Reference
 
@@ -114,21 +136,13 @@ Authentication: This application requires authentication to perform various acti
 The application has two types of roles:
 
 - Agency:
-  - Agency
-    - can only view the list of artist and movies and can view complete information for any actor or movie
-    - can also create an actor and movie and also modify respective information
-    - can also delete an actor or a movie
-    - has `get:movies, get:movies-detail, post:movie, patch:movie, delete:movie, get:actors, get:actors-detail, post:actor, patch:actor, delete:actor` permissions
-  - User
-    - can only view the list of artist and movies and can view complete information for any actor or movie
-    - has `get:movies, get:movies-detail, get:actors, get:actors-detail` permissions
-- User:
-  - Agency
-    - Can view actors and movies
-    - Add or delete an actor from the database
-    - Modify actors or movies
-  - User
-    - Can view actors and movies
+  - can view the list of artist and movies and can view complete information for any actor or movie
+  - can also create an actor and movie and also modify respective information
+  - can also delete an actor or a movie
+  - has `get:movies, get:movies-detail, post:movie, patch:movie, delete:movie, get:actors, get:actors-detail, post:actor, patch:actor, delete:actor` permissions
+- User
+  - can only view the list of artist and movies and can view complete information for any actor or movie
+  - has `get:movies, get:movies-detail, get:actors, get:actors-detail` permissions
 
 ### 4.2. Error Handling
 
@@ -666,3 +680,114 @@ psql -U postgres capstone_test < capstone.sql
 OR psql capstone_test < capstone_no_owner.sql
 python test_app_user.py
 ```
+
+## 6. Deploy to Heroku
+- Generally
+  - Assuems that you have:
+    - a free [Heroku account](https://signup.heroku.com/dc).
+    - Python version 3.10 installed locally - see the installation guides for [OS X](https://docs.python-guide.org/starting/install3/osx/), [Windows](https://docs.python-guide.org/starting/install3/win/), and [Linux](https://docs.python-guide.org/starting/install3/linux/).
+    - [Postgres](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup) installed locally, if running the app locally.
+- Heroku CLI
+  - Use the `heroku login` command to log in to the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+- Create app on the Heroku
+  - *** Before continuing, make sure both Git and the Heroku CLI are installed (see [Set up](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true#set-up)). ***
+  - Create an app on Heroku, which prepares Heroku to receive your source code:
+  ```bash
+  heroku create
+  ```
+  or specify your app name
+  ```bash
+  heroku create [your_app_name]
+  ```
+  - Add git remote for Heroku to local repository
+    -Using the git url obtained from the last step, in terminal run: 
+    ```bash
+    git remote add heroku heroku_git_url.
+    ```
+  - Deploy your code:
+    ```bash
+    git push heroku main
+    ```
+    or 
+    ```bash
+    git push heroku master
+    ```
+  - The creation and deployment can be implemented on Heroku dashboard by logging in [Heroku](https://www.heroku.com).
+
+  For more information, refer to [Getting Started on Heroku with Python](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true).
+- [Add-on](https://elements.heroku.com/addons)
+  - Database
+    - You can choose to use [Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql), then you need add-ons. You can implement this step in [here](https://elements.heroku.com/addons/heroku-postgresql) by clicking "Install Heroku Postgres".
+    - Or execute:
+    ```bash
+    heroku addons:create heroku-postgresql:hobby-dev --app name_of_your_application
+    ```
+      - Breaking down the `heroku-postgresql:hobby-dev` section of this command, heroku-postgresql is the name of the addon. `hobby-dev` on the other hand specifies the tier of the addon, in this case the free version which has a limit on the amount of data it will store, albeit fairly high.
+      - Run `heroku config --app name_of_your_application` in order to check your configuration variables in Heroku. You will see DATABASE_URL and the URL of the database you just created. That's excellent, but there were a lot more environment variables our apps use.
+- Importing Heroku Postgres Databases
+  - Method 1 from [Heroku documentation](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
+    - Create dump file
+    ```bash
+    pg_dump -Fc --no-acl --no-owner -h localhost -U myuser mydb > mydb.dump
+    ```
+    - [S3 setup](https://devcenter.heroku.com/articles/s3#manually-uploading-static-assets)
+      - Get [sucurity credentials](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys).
+      ```bash
+      $ heroku config:set AWS_ACCESS_KEY_ID=MY-ACCESS-ID AWS_SECRET_ACCESS_KEY=MY-ACCESS-KEY 
+      ```
+      - Create S3 Bucket in AWS
+      - Name Your Bucket
+        ```bash
+        heroku config:set S3_BUCKET_NAME=example-app-assets
+        ```
+      - Upload your files
+    - Import to Heroku Postgres
+      - Generate a signed URL using the aws console:
+      ```bash
+      aws s3 presign s3://your-bucket-address/your-object
+      ```
+      - Use the raw file URL in the pg:backups restore command:
+      ```bash
+      heroku pg:backups:restore '<SIGNED URL>' DATABASE_URL
+      ```
+      Any presigned URL or public repo can do.
+      *** Note that the pg:backups restore command drops any tables and other database objects before recreating them.***
+  - Method 2 from local
+    - Create backup file in .sql 
+    ```bash
+    pg_dump <DATABASE_NAME> > <FILENAME>.sql 
+    ```
+    - Import to Heroku Postgres
+      - Generate a signed URL using the aws console:
+      ```bash
+      heroku pg:psql --app <APP_NAME> < gce.sql
+      ```
+- Run Database Manage & Migration
+  - Run locally first 
+    Install:
+    ```bash
+    pip install flask_script
+    pip install flask_migrate
+    pip install psycopg2-binary
+    ```
+    Execute:
+    ```bash
+    flask db init
+    flask db migrate -m "Initial migration."
+    flask db upgrade
+    ```
+  - Run Heroku Database Migration
+    - It depends. If needed, execute:
+      ```bash
+        heroku run python manage.py db upgrade --app name_of_your_application
+      ```
+      or
+      ```bash
+      heroku run flask db upgrade
+      ```
+- See [Deploymnet Docs](https://devcenter.heroku.com/categories/deployment), [Getting Started with Python](https://devcenter.heroku.com/articles/getting-started-with-python) and previous mentioned official links for more information.
+    
+  
+
+
+  
