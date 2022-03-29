@@ -40,6 +40,7 @@ The Casting Agency project isan application that is responsible for creating mov
   - PATCH /actors/ and /movies/
 
 - Roles:
+
   - Agency
     - Can view actors and movies
     - Add or delete an actor from the database
@@ -83,7 +84,7 @@ or
 pip install -r requirements.txt
 ```
 
-This will install all of the required packages this project selected within the `requirements.txt` file. Furthermore, it is better to use pip3 for python3 because on some systems pip is mapped with python2. However, pip is working for me, I am not going to hide it and providing another way. Maybe pip3 did not work with you, yet pip did!
+This will install all of the required packages this project selected within the `requirements.txt` file. Furthermore, it is better to use pip3 for python3 because on some systems pip is mapped with python2. However, pip is working for me, I am not going to hide it and providing it as another way for you. Maybe pip3 did not work with you, yet pip did!
 
 ##### Key Dependencies
 
@@ -107,7 +108,7 @@ This will install all of the required packages this project selected within the 
 
 - [functools](https://docs.python.org/3/library/functools.html) The functools module is for higher-order functions: functions that act on or return other functions. In general, any callable object can be treated as a function for the purposes of this module. Also, you can refer to [here](https://www.geeksforgeeks.org/functools-module-in-python/) for more information.
 
-- [werkzeug.datastructures](https://werkzeug.palletsprojects.com/en/2.0.x/datastructures/) Werkzeug provides some subclasses of common Python objects to extend them with additional features. Some of them are used to make them immutable, others are used to change some semantics to better work with HTTP. 
+- [werkzeug.datastructures](https://werkzeug.palletsprojects.com/en/2.0.x/datastructures/) Werkzeug provides some subclasses of common Python objects to extend them with additional features. Some of them are used to make them immutable, others are used to change some semantics to better work with HTTP.
 
 ### 3.2. Running the server
 
@@ -150,11 +151,14 @@ Authentication: This application requires authentication to perform various acti
 The application has two types of roles:
 
 - Agency:
+
   - can view the list of artist and movies and can view complete information for any actor or movie
   - can also create an actor and movie and also modify respective information
   - can also delete an actor or a movie
   - has `get:movies, get:movies-detail, post:movie, patch:movie, delete:movie, get:actors, get:actors-detail, post:actor, patch:actor, delete:actor` permissions
+
 - User
+
   - can only view the list of artist and movies and can view complete information for any actor or movie
   - has `get:movies, get:movies-detail, get:actors, get:actors-detail` permissions
 
@@ -698,34 +702,48 @@ python test_app_user.py
 ## 6. Deploy to Heroku
 
 ### 6.1 Generally
+
 - Assuems that you have:
+
   - a free [Heroku account](https://signup.heroku.com/dc).
   - Python version 3.10 installed locally - see the installation guides for [OS X](https://docs.python-guide.org/starting/install3/osx/), [Windows](https://docs.python-guide.org/starting/install3/win/), and [Linux](https://docs.python-guide.org/starting/install3/linux/).
   - [Postgres](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup) installed locally, if running the app locally.
 
 ### 6.2 Heroku CLI
+
 - Use the `heroku login` command to log in to the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 
 ### 6.3 Create app on the Heroku
-*** Before continuing, make sure both Git and the Heroku CLI are installed (see [Set up](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true#set-up)). ***
+
+**_ Before continuing, make sure both Git and the Heroku CLI are installed (see [Set up](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true#set-up)). _**
+
 - Create an app on Heroku, which prepares Heroku to receive your source code:
-```bash
-heroku create
-```
-or specify your app name
-```bash
-heroku create [your_app_name]
-```
+
+  ```bash
+  heroku create
+  ```
+
+  or specify your app name
+
+  ```bash
+  heroku create [your_app_name]
+  ```
+
 - Add git remote for Heroku to local repository
-  -Using the git url obtained from the last step, in terminal run: 
+  -Using the git url obtained from the last step, in terminal run:
+
   ```bash
   git remote add heroku heroku_git_url.
   ```
+
 - Deploy your code:
+
   ```bash
   git push heroku main
   ```
-  or 
+
+  or
+
   ```bash
   git push heroku master
   ```
@@ -735,91 +753,121 @@ The creation and deployment can be implemented on Heroku dashboard by logging in
 For more information, refer to [Getting Started on Heroku with Python](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true).
 
 ### 6.4 [Add-on](https://elements.heroku.com/addons)
+
 - Database
+
   - You can choose to use [Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql), then you need add-ons. You can implement this step in [here](https://elements.heroku.com/addons/heroku-postgresql) by clicking "Install Heroku Postgres".
   - Or execute:
+
   ```bash
   heroku addons:create heroku-postgresql:hobby-dev --app name_of_your_application
   ```
-    - Breaking down the `heroku-postgresql:hobby-dev` section of this command, heroku-postgresql is the name of the addon. `hobby-dev` on the other hand specifies the tier of the addon, in this case the free version which has a limit on the amount of data it will store, albeit fairly high.
-    - Run `heroku config --app name_of_your_application` in order to check your configuration variables in Heroku. You will see DATABASE_URL and the URL of the database you just created. That's excellent, but there were a lot more environment variables our apps use.
+
+  - Breaking down the `heroku-postgresql:hobby-dev` section of this command, heroku-postgresql is the name of the addon. `hobby-dev` on the other hand specifies the tier of the addon, in this case the free version which has a limit on the amount of data it will store, albeit fairly high.
+  - Run `heroku config --app name_of_your_application` in order to check your configuration variables in Heroku. You will see DATABASE_URL and the URL of the database you just created. That's excellent, but there were a lot more environment variables our apps use.
 
 ### 6.5 Importing Heroku Postgres Databases
+
 There are two ways to importing Heroku Postgres Database. First one is recommended in official documentation. Second one is what I found.
 
-- Method 1 [Import Heroku Postgres via AWS S3](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
+- Method 1: [Import Heroku Postgres via AWS S3](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
+
   - Create dump file
+
   ```bash
   pg_dump -Fc --no-acl --no-owner -h localhost -U myuser mydb > mydb.dump
   ```
+
   - [S3 setup](https://devcenter.heroku.com/articles/s3#manually-uploading-static-assets)
+
     - Get [sucurity credentials](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys).
+
     ```bash
-    $ heroku config:set AWS_ACCESS_KEY_ID=MY-ACCESS-ID AWS_SECRET_ACCESS_KEY=MY-ACCESS-KEY 
+    $ heroku config:set AWS_ACCESS_KEY_ID=MY-ACCESS-ID AWS_SECRET_ACCESS_KEY=MY-ACCESS-KEY
     ```
+
     - Create S3 Bucket in AWS
     - Name Your Bucket
+
       ```bash
       heroku config:set S3_BUCKET_NAME=example-app-assets
       ```
+
     - Upload your files
+
   - Import to Heroku Postgres
+
     - Generate a signed URL using the aws console:
+
     ```bash
     aws s3 presign s3://your-bucket-address/your-object
     ```
-    
+
     Use the raw file URL in the pg:backups restore command:
+
     ```bash
     heroku pg:backups:restore '<SIGNED URL>' DATABASE_URL
     ```
+
     Any presigned URL or public repo can do the above.
-    *** Note that the pg:backups restore command drops any tables and other database objects before recreating them.***
-- Method 2 [Import from local](https://stackoverflow.com/questions/57071382/cant-import-to-heroku-postgres-with-aws)
-  - Create backup file in .sql 
+
+    **_ Note that the pg:backups restore command drops any tables and other database objects before recreating them._**
+
+- Method 2: [Import from local](https://stackoverflow.com/questions/57071382/cant-import-to-heroku-postgres-with-aws)
+
+  - Create backup file in .sql
+
   ```bash
-  pg_dump <DATABASE_NAME> > <FILENAME>.sql 
+  pg_dump <DATABASE_NAME> > <FILENAME>.sql
   ```
+
   If you want the database has no owner, you can also try:
+
   ```bash
-  pg_dump --no-owner -U postgres <DATABASE_NAME> > <FILENAME>.sql 
+  pg_dump --no-owner -U postgres <DATABASE_NAME> > <FILENAME>.sql
   ```
 
   - Import to Heroku Postgres
+
     - Generate a signed URL using the aws console:
+
     ```bash
-    heroku pg:psql --app <APP_NAME> < <FILENAME>.sql 
+    heroku pg:psql --app <APP_NAME> < <FILENAME>.sql
     ```
 
 - Run Database Manage & Migration
-  - Run locally first 
+
+  - Run locally first
     Install:
+
     ```bash
     pip install flask_script
     pip install flask_migrate
     pip install psycopg2-binary
     ```
+
     Execute:
+
     ```bash
     flask db init
     flask db migrate -m "Initial migration."
     flask db upgrade
     ```
-    *** It is very important to run migration locally first. Otherwise, it could mess up the app on Heroku. If it happended, you need to create the database from scratch.
+
+    \*\*\* It is very important to run migration locally first. Otherwise, it could mess up the app on Heroku. If it happended, you need to create the database from scratch.
 
   - Run Heroku Database Migration
+
     - It depends. If needed, execute:
+
       ```bash
         heroku run python manage.py db upgrade --app name_of_your_application
       ```
+
       or
+
       ```bash
       heroku run flask db upgrade
       ```
-      
-- See [Deploymnet Docs](https://devcenter.heroku.com/categories/deployment), [Getting Started with Python](https://devcenter.heroku.com/articles/getting-started-with-python) and previous mentioned official links for more information.
-    
-  
 
-
-  
+See [Deploymnet Docs](https://devcenter.heroku.com/categories/deployment), [Getting Started with Python](https://devcenter.heroku.com/articles/getting-started-with-python) and previous mentioned official links for more information.
