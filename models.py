@@ -18,7 +18,7 @@ load_dotenv()
 # database_path = "postgres://{}:{}@{}:{}/{}".format(DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME)
 
 ## Heroku Postgres URL
-database_path=os.environ.get("DATABASE_URL_HEROKU")
+database_path=os.environ.get("DATABASE_URL")
 
 db = SQLAlchemy()
 
